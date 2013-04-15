@@ -1,356 +1,316 @@
 <?php
-// Author: Sébastien Boisvert
+// Author: Sébastien Boisvert and Thierry Moisan
 // Client: Coop Roue-Libre de l'Université Laval
 // License: GPLv3
 
-class LoanManagement extends Controller{
+class LoanManagement extends Controller
+{
 
-	public function registerController($core){
-		$core->registerControllerName("LoanManagement",$this);
-		$core->secureController("LoanManagement");
-	}
+    public function registerController($core)
+    {
+        $core->registerControllerName("LoanManagement", $this);
+        $core->secureController("LoanManagement");
+    }
 
 
-	public function call_listAll($core){
+    public function call_listAll($core)
+    {
+        if (array_key_exists("placeIdentifier", $_GET)) {
 
-		if(array_key_exists("placeIdentifier",$_GET)){
+            $item = Place::findOne($core, "Place", $_GET['placeIdentifier']);
 
-			$item=Place::findOne($core,"Place",$_GET['placeIdentifier']);
+            $core->setPageTitle("Voir les prêts pour le point de service " . $item->getName());
 
-			$core->setPageTitle("Voir les prêts pour le point de service ".$item->getName());
+            $items = $item->getLoans();
 
-			$items=$item->getLoans();
+        } elseif (array_key_exists("memberIdentifier", $_GET)) {
 
-		}elseif(array_key_exists("memberIdentifier",$_GET)){
+            $item = Member::findOne($core, "Member", $_GET['memberIdentifier']);
 
-			$item=Member::findOne($core,"Member",$_GET['memberIdentifier']);
+            $core->setPageTitle("Voir les prêts pour le membre " . $item->getName());
 
-			$core->setPageTitle("Voir les prêts pour le membre ".$item->getName());
+            $items = $item->getLoans();
+        } elseif (array_key_exists("bikeIdentifier", $_GET)) {
 
-			$items=$item->getLoans();
-		}elseif(array_key_exists("bikeIdentifier",$_GET)){
+            $item = Bike::findOne($core, "Bike", $_GET['bikeIdentifier']);
 
-			$item=Bike::findOne($core,"Bike",$_GET['bikeIdentifier']);
+            $core->setPageTitle("Voir les prêts pour le vélo " . $item->getName());
 
-			$core->setPageTitle("Voir les prêts pour le vélo ".$item->getName());
+            $items = $item->getLoans();
 
-			$items=$item->getLoans();
 
+        } else {
 
-		}else{
+            $core->setPageTitle("Voir tous les prêts");
 
-			$core->setPageTitle("Voir tous les prêts");
+            $items = Loan::findAll($core, "Loan");
 
-			$items=Loan::findAll($core,"Loan");
+        }
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-		}
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+    public function call_list($core)
+    {
 
+        if (array_key_exists("placeIdentifier", $_GET)) {
 
+            $item = Place::findOne($core, "Place", $_GET['placeIdentifier']);
 
-	public function call_list($core){
+            $core->setPageTitle("Voir les prêts pour le point de service " . $item->getName());
 
-		if(array_key_exists("placeIdentifier",$_GET)){
+            $listReturnedLate = $item->findAllReturnedLateLoans($core);
+            $listReturnedNotLate = $item->findAllReturnedNotLateLoans($core);
+            $listActiveLate = $item->findAllActiveLateLoans($core);
+            $listActiveNotLate = $item->findAllActiveNotLateLoans($core);
 
-			$item=Place::findOne($core,"Place",$_GET['placeIdentifier']);
+        } elseif (array_key_exists("memberIdentifier", $_GET)) {
 
-			$core->setPageTitle("Voir les prêts pour le point de service ".$item->getName());
+            $item = Member::findOne($core, "Member", $_GET['memberIdentifier']);
 
-			$listReturnedLate=$item->findAllReturnedLateLoans($core);
-			$listReturnedNotLate=$item->findAllReturnedNotLateLoans($core);
-			$listActiveLate=$item->findAllActiveLateLoans($core);
-			$listActiveNotLate=$item->findAllActiveNotLateLoans($core);
+            $core->setPageTitle("Voir les prêts pour le membre " . $item->getName());
+            $listReturnedLate = $item->findAllReturnedLateLoans($core);
+            $listReturnedNotLate = $item->findAllReturnedNotLateLoans($core);
+            $listActiveLate = $item->findAllActiveLateLoans($core);
+            $listActiveNotLate = $item->findAllActiveNotLateLoans($core);
 
-		}elseif(array_key_exists("memberIdentifier",$_GET)){
 
-			$item=Member::findOne($core,"Member",$_GET['memberIdentifier']);
+        } elseif (array_key_exists("bikeIdentifier", $_GET)) {
 
-			$core->setPageTitle("Voir les prêts pour le membre ".$item->getName());
-			$listReturnedLate=$item->findAllReturnedLateLoans($core);
-			$listReturnedNotLate=$item->findAllReturnedNotLateLoans($core);
-			$listActiveLate=$item->findAllActiveLateLoans($core);
-			$listActiveNotLate=$item->findAllActiveNotLateLoans($core);
+            $item = Bike::findOne($core, "Bike", $_GET['bikeIdentifier']);
 
+            $core->setPageTitle("Voir les prêts pour le vélo " . $item->getName());
 
-		}elseif(array_key_exists("bikeIdentifier",$_GET)){
 
-			$item=Bike::findOne($core,"Bike",$_GET['bikeIdentifier']);
+            $listReturnedLate = $item->findAllReturnedLateLoans($core);
+            $listReturnedNotLate = $item->findAllReturnedNotLateLoans($core);
+            $listActiveLate = $item->findAllActiveLateLoans($core);
+            $listActiveNotLate = $item->findAllActiveNotLateLoans($core);
 
-			$core->setPageTitle("Voir les prêts pour le vélo ".$item->getName());
 
+        } else {
 
-			$listReturnedLate=$item->findAllReturnedLateLoans($core);
-			$listReturnedNotLate=$item->findAllReturnedNotLateLoans($core);
-			$listActiveLate=$item->findAllActiveLateLoans($core);
-			$listActiveNotLate=$item->findAllActiveNotLateLoans($core);
+            $core->setPageTitle("Voir tous les prêts");
 
+            $listReturnedLate = Loan::findAllReturnedLateLoans($core);
+            $listReturnedNotLate = Loan::findAllReturnedNotLateLoans($core);
+            $listActiveLate = Loan::findAllActiveLateLoans($core);
+            $listActiveNotLate = Loan::findAllActiveNotLateLoans($core);
 
+        }
 
-		}else{
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-			$core->setPageTitle("Voir tous les prêts");
+    public function call_add_selectMember($core)
+    {
+        if (array_key_exists("placeIdentifier", $_GET)) {
+            $place = Place::findOne($core, "Place", $_GET['placeIdentifier']);
+        }
 
-			$listReturnedLate=Loan::findAllReturnedLateLoans($core);
-			$listReturnedNotLate=Loan::findAllReturnedNotLateLoans($core);
-			$listActiveLate=Loan::findAllActiveLateLoans($core);
-			$listActiveNotLate=Loan::findAllActiveNotLateLoans($core);
+        $core->setPageTitle("Quel membre veut emprunter un vélo ?");
 
-		}
+        $all = Member::getMembersThatCanLoanABike($core);
+        $members = $all;
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        $bikes = $place->getAvailableBikes();
 
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-	public function call_add_searchMember($core){
 
-		$core->setPageTitle("Quel membre veut emprunter un vélo ?");
+    public function call_add_validate($core)
+    {
+        $core->setPageTitle("Voulez-vous faire ce prêt ?");
 
-		$items=Member::getMembersThatCanLoanABike($core);
+        $place = Place::findWithIdentifier($core, "Place", $_POST['placeIdentifier']);
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        $bike = Bike::findWithIdentifier($core, "Bike", $_POST['bikeIdentifier']);
 
+        $member = Member::findWithIdentifier($core, "Member", $_POST['memberIdentifier']);
 
+        $startingDate = $core->getCurrentTime();
 
-	public function call_add_selectMember($core){
+        $today = $core->getCurrentDate();
 
-		$core->setPageTitle("Quel membre veut emprunter un vélo ?");
+        $schedule = $place->getSchedule($today);
 
-		$items=NULL;
-		$words=NULL;
+        $endingDate = $this->getEndingDate($place, $today, $startingDate);
 
-		$all=Member::getMembersThatCanLoanABike($core);
+        $minutes = (strtotime($endingDate) - strtotime($startingDate)) / 60;
 
-		if(array_key_exists('query',$_POST)){
-			$words=explode(" ",$_POST['query']);
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-			$items=Member::getMembersThatCanLoanABikeWithKeywords($core,$words);
-		}else{
-			$items=$all;
-		}
+    private function getEndingDate($place, $today, $startingDate)
+    {
+        $now = strtotime($startingDate);
+        $endingDate = NULL;
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        $schedule = $place->getSchedule($today);
 
+        if ($schedule != NULL) {
+            $dayOfWeek = date("N") - 1;
 
-	public function call_add_selectPlace($core){
+            $scheduledDay = $schedule->getScheduledDay($dayOfWeek);
 
-		$core->setPageTitle("À quel point de service êtes-vous ?");
+            $length = $scheduledDay->getAttribute("loanLength") * 60 * 60;
 
-		$user=User::findOne($core,"User",$_SESSION['id']);
 
-		$items=$user->getPlaces();
+            $final = $now + $length;
+            $endingDate = date("Y-m-d H:i:s", $final);
 
-		$member=Member::findWithIdentifier($core,"Member",$_POST['memberIdentifier']);
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+            $eveningTime = date("Y-m-d ") . " " . $scheduledDay->getAttribute("eveningTime");
 
-	public function call_add_selectBike($core){
+            // if this is after the eveningTime, return the bike the next day before returnTime
+            if (strtotime($startingDate) >= strtotime($eveningTime)) {
+                $tomorrow = date("Y-m-d", time() + 24 * 60 * 60);
+                $endingDate = $this->getNextEndingDate($place, $tomorrow);
+            }
+        }
 
-		$core->setPageTitle("Quel vélo voulez-vous ?");
+        return $endingDate;
 
-		$place=Place::findWithIdentifier($core,"Place",$_POST['placeIdentifier']);
-	
-		$items=$place->getAvailableBikes();
+    }
 
-		$member=Member::findWithIdentifier($core,"Member",$_POST['memberIdentifier']);
+    private function getNextEndingDate($place, $day)
+    {
+        $schedule = $place->getSchedule($day);
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        if ($schedule != NULL) {
+            // get the day of the week
+            $dayOfWeek = date("N", strtotime($day)) - 1;
 
-	public function call_add_validate($core){
+            $scheduledDay = $schedule->getScheduledDay($dayOfWeek);
 
-		$core->setPageTitle("Voulez-vous faire ce prêt ?");
+            $isOpened = $scheduledDay->getAttribute("opened");
 
-		$place=Place::findWithIdentifier($core,"Place",$_POST['placeIdentifier']);
-	
-		$bike=Bike::findWithIdentifier($core,"Bike",$_POST['bikeIdentifier']);
+            if ($isOpened) {
+                // check for closed days too
 
-		$member=Member::findWithIdentifier($core,"Member",$_POST['memberIdentifier']);
+                if ($place->isClosedDay($day)) {
+                    $isOpened = false;
+                }
+            }
 
-		$startingDate=$core->getCurrentTime();
+            if (!$isOpened) {
+                $tomorrow = date("Y-m-d", strtotime($day) + 24 * 60 * 60);
+                return $this->getNextEndingDate($place, $tomorrow);
+            }
 
-		$today=$core->getCurrentDate();
+            return $day . " " . $scheduledDay->getAttribute("returnTime");
+        }
 
-		$schedule=$place->getSchedule($today);
+        return NULL;
+    }
 
-		$endingDate=$this->getEndingDate($place,$today,$startingDate);
+    public function call_add_save($core)
+    {
 
-		$minutes=(strtotime($endingDate)-strtotime($startingDate))/60;
+        $core->setPageTitle("Sauvegarde d'un prêt");
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        $place = Place::findWithIdentifier($core, "Place", $_POST['placeIdentifier']);
 
-	private function getEndingDate($place,$today,$startingDate){
+        $bike = Bike::findWithIdentifier($core, "Bike", $_POST['bikeIdentifier']);
 
-		$now=strtotime($startingDate);
-		$endingDate=NULL;
+        $member = Member::findWithIdentifier($core, "Member", $_POST['memberIdentifier']);
 
-		$schedule=$place->getSchedule($today);
+        $startingDate = $core->getCurrentTime();
 
-		if($schedule!=NULL){
-			$dayOfWeek=date("N")-1;
+        $today = $core->getCurrentDate();
 
-			$scheduledDay=$schedule->getScheduledDay($dayOfWeek);
+        $endingDate = $this->getEndingDate($place, $today, $startingDate);
 
-			$length=$scheduledDay->getAttribute("loanLength")*60*60;
+        $attributes = array();
 
-			
-			$final=$now+$length;
-			$endingDate=date("Y-m-d H:i:s",$final);
+        $attributes["bikeIdentifier"] = $_POST['bikeIdentifier'];
+        $attributes["userIdentifier"] = $_SESSION['id'];
+        $attributes["memberIdentifier"] = $_POST['memberIdentifier'];
+        $attributes["startingDate"] = $_POST['startingDate'];
+        $attributes["expectedEndingDate"] = $_POST['expectedEndingDate'];
+        $attributes["actualEndingDate"] = $_POST['actualEndingDate'];
+        $attributes["returnUserIdentifier"] = $_SESSION['id'];
+        $attributes["placeIdentifier"] = $_POST['placeIdentifier'];
 
-			
-			$eveningTime=date("Y-m-d ")." ".$scheduledDay->getAttribute("eveningTime");
+        $item = Loan::insertRow($core, "Loan", $attributes);
 
-			// if this is after the eveningTime, return the bike the next day before returnTime
-			if(strtotime($startingDate) >= strtotime($eveningTime)){
-				$tomorrow=date("Y-m-d",time()+24*60*60);
-				$endingDate=$this->getNextEndingDate($place,$tomorrow);
-			}
-		}
+        $id = $item->getId();
+        $name = $item->getName();
 
-		return $endingDate;
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-	}
+    public function call_view($core)
+    {
 
-	private function getNextEndingDate($place,$day){
-		$schedule=$place->getSchedule($day);
+        $core->setPageTitle("Voir un prêt");
 
-		if($schedule!=NULL){
-			// get the day of the week
-			$dayOfWeek=date("N",strtotime($day))-1;
+        $item = Loan::findWithIdentifier($core, "Loan", $_GET['id']);
+        $place = $item->getPlace();
+        $user = User::findOne($core, "User", $_SESSION['id']);
+        $isLoaner = $place->isLoaner($user);
 
-			$scheduledDay=$schedule->getScheduledDay($dayOfWeek);
+        $columnNames = Loan::getFieldNames();
 
-			$isOpened=$scheduledDay->getAttribute("opened");
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-			if($isOpened){
-				// check for closed days too
-				
-				if($place->isClosedDay($day)){
-					$isOpened=false;
-				}
-			}
+    public function call_return_validate($core)
+    {
 
-			if(!$isOpened){
-				$tomorrow=date("Y-m-d",strtotime($day)+24*60*60);
-				return $this->getNextEndingDate($place,$tomorrow);
-			}
+        $core->setPageTitle("Voulez-vous terminer le prêt ?");
 
-			return $day." ".$scheduledDay->getAttribute("returnTime");
-		}
+        $item = Loan::findWithIdentifier($core, "Loan", $_GET['id']);
 
-		return NULL;
-	}
+        $columnNames = Loan::getFieldNames();
 
-	public function call_add_save($core){
+        $currentTime = $core->getCurrentTime();
 
-		$core->setPageTitle("Sauvegarde d'un prêt");
+        $user = User::findOne($core, "User", $_SESSION['id']);
+        $isAdministrator = $user->isAdministrator();
 
-		$place=Place::findWithIdentifier($core,"Place",$_POST['placeIdentifier']);
-	
-		$bike=Bike::findWithIdentifier($core,"Bike",$_POST['bikeIdentifier']);
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 
-		$member=Member::findWithIdentifier($core,"Member",$_POST['memberIdentifier']);
+    public function call_return_save($core)
+    {
 
-		$startingDate=$core->getCurrentTime();
+        $core->setPageTitle("Le prêt est terminé.");
 
-		$today=$core->getCurrentDate();
+        $item = Loan::findWithIdentifier($core, "Loan", $_GET['id']);
 
-		$endingDate=$this->getEndingDate($place,$today,$startingDate);
+        $user = User::findOne($core, "User", $_SESSION['id']);
 
-		$attributes=array();
+        $item->returnBike($_POST["actualEndingDate"], $user);
 
-		$attributes["bikeIdentifier"]=$_POST['bikeIdentifier'];
-		$attributes["userIdentifier"]=$_SESSION['id'];
-		$attributes["memberIdentifier"]=$_POST['memberIdentifier'];
-		$attributes["startingDate"]=$_POST['startingDate'];
-		$attributes["expectedEndingDate"]=$_POST['expectedEndingDate'];
-		$attributes["actualEndingDate"]=$_POST['actualEndingDate'];
-		$attributes["returnUserIdentifier"]=$_SESSION['id'];
-		$attributes["placeIdentifier"]=$_POST['placeIdentifier'];
+        $item = Loan::findWithIdentifier($core, "Loan", $_GET['id']);
 
-		$item=Loan::insertRow($core,"Loan",$attributes);
+        $columnNames = Loan::getFieldNames();
 
-		$id=$item->getId();
-		$name=$item->getName();
+        $memberLock = NULL;
 
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+        if ($item->isLate()) {
+            $hours = $item->getLateHours();
 
-	public function call_view($core){
+            $data = array();
+            $data["memberIdentifier"] = $item->getAttribute("memberIdentifier");
+            $now = time();
 
-		$core->setPageTitle("Voir un prêt");
+            // for each hour late, we ban one day
+            $endingPoint = $now + $hours * 24 * 60 * 60;
 
-		$item=Loan::findWithIdentifier($core,"Loan",$_GET['id']);
-		$place=$item->getPlace();
-		$user=User::findOne($core,"User",$_SESSION['id']);
-		$isLoaner=$place->isLoaner($user);
+            $data["startingDate"] = date("Y-m-d H:i:s", $now);
+            $data["endingDate"] = date("Y-m-d H:i:s", $endingPoint);
+            $data["lifted"] = 0;
+            $data["explanation"] = "";
+            $data["userIdentifier"] = $_SESSION['id'];
 
-		$columnNames=Loan::getFieldNames();
-		
-		include($this->getView(__CLASS__,__METHOD__));
-	}
+            $memberLock = MemberLock::insertRow($core, "MemberLock", $data);
+        }
 
-	public function call_return_validate($core){
-
-		$core->setPageTitle("Voulez-vous terminer le prêt ?");
-
-		$item=Loan::findWithIdentifier($core,"Loan",$_GET['id']);
-
-		$columnNames=Loan::getFieldNames();
-
-		$currentTime=$core->getCurrentTime();
-		
-		$user=User::findOne($core,"User",$_SESSION['id']);
-		$isAdministrator=$user->isAdministrator();
-		
-		include($this->getView(__CLASS__,__METHOD__));
-	}
-
-	public function call_return_save($core){
-
-		$core->setPageTitle("Le prêt est terminé.");
-
-		$item=Loan::findWithIdentifier($core,"Loan",$_GET['id']);
-
-		$user=User::findOne($core,"User",$_SESSION['id']);
-
-		$item->returnBike($_POST["actualEndingDate"],$user);
-		
-		$item=Loan::findWithIdentifier($core,"Loan",$_GET['id']);
-
-		$columnNames=Loan::getFieldNames();
-	
-		$memberLock=NULL;
-
-		if($item->isLate()){
-			$hours=$item->getLateHours();
-
-			$data=array();
-			$data["memberIdentifier"]=$item->getAttribute("memberIdentifier");
-			$now=time();
-
-			// for each hour late, we ban one day
-			$endingPoint=$now+ $hours*24*60*60;
-			
-			$data["startingDate"]=date("Y-m-d H:i:s",$now);
-			$data["endingDate"]=date("Y-m-d H:i:s",$endingPoint);
-			$data["lifted"]=0;
-			$data["explanation"]="";
-			$data["userIdentifier"]=$_SESSION['id'];
-
-			$memberLock=MemberLock::insertRow($core,"MemberLock",$data);
-		}
-
-		include($this->getView(__CLASS__,__METHOD__));
-	}
-
-
-
+        include($this->getView(__CLASS__, __METHOD__));
+    }
 };
 
 ?>

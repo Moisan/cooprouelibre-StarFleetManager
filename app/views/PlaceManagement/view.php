@@ -12,7 +12,7 @@ $this->printRowAsTable($item);
 <?php
 
 if($isLoaner){
-	$core->makeButton("?controller=LoanManagement&action=add_searchMember","Ajouter un prêt");
+	$core->makeButton("?controller=LoanManagement&action=add_selectMember&placeIdentifier=$placeIdentifier","Ajouter un prêt");
 }
 
 $core->makeButton("?controller=LoanManagement&action=list&placeIdentifier=$placeIdentifier","Voir les prêts");
