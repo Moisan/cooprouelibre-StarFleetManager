@@ -1,169 +1,138 @@
-/*
-dark green: 
-light green: #85bd3e;
-gray: #b4b6b1
-*/
-
-body{
-color: black;
-font-family: Arial;
+body {
+    color: #000;
+    font-family: Arial;
 }
 
-a{
-text-decoration: none;
-color: #209048; 
+a {
+    text-decoration: none;
+    color: #209048;
 }
 
-a:hover{
-
-text-decoration: underline;
+a:hover {
+    text-decoration: underline;
 }
 
-.container1{
-position: absolute; left: +50%; top: +10px;
+.container1 {
+    position: absolute;
+    left: 50%;
+    top: 10px;
 }
 
-.container2{
-position: relative; left: -400px;
-/*background: pink;*/
-width: 800px;
+.container2 {
+    position: relative;
+    left: -400px;
+    width: 800px;
 }
 
-.logo{
-position: relative;
-left: +0px;
-top: +0px;
+.logo {
+    position: relative;
+    left: 0;
+    top: 0;
 }
 
-.topPanel{
-/*border-color: #85bd3e;*/
-/*
-border-color: #209048; 
-border-style: solid;
-border-width: 2px;
-*/
-width: 596px;
-height: 80px;
-margin-top: -462px;
-margin-left: 204px;
-
-position: absolute;
-
-
-background-color: #85bd3e;
+.topPanel {
+    width: 596px;
+    height: 80px;
+    margin-top: -462px;
+    margin-left: 204px;
+    position: absolute;
+    background-color: #85bd3e;
 }
 
-.contentPanel{
-position: absolute;
-margin-left: 204px;
-margin-top: -380px;*
-width: 596px;
-padding-bottom: 100px;
-/*height: 500px;*/
+.contentPanel {
+    position: absolute;
+    margin-left: 204px;
+    margin-top: -380px;
+    width: 596px;
+    padding-bottom: 100px;
 }
 
-.bottomPanel{
-
-position: absolute;
-/*bottom: 0px;*/
-margin-top: 20px;
-/*margin-left: 204px;*/
-width: 596px;
-height: 60px;
-/*text-align: center;*/
-
-background-color: white;
-border-color: #85bd3e;
-border-style: solid;
-border-width: 2px;
-
+.bottomPanel {
+    position: absolute;
+    margin-top: 20px;
+    width: 596px;
+    height: 60px;
+    background-color: #FFF;
+    border-color: #85bd3e;
+    border-style: solid;
+    border-width: 2px;
 }
 
-.text{
-margin: 10px;
+.text {
+    margin: 10px;
 }
 
-.buttonLink{
-color: white;
+.buttonLink {
+    color: #FFF;
 }
 
-.userLink{
-color: #209048; 
+.userLink {
+    color: #209048;
 }
 
-.button{
-display: inline-block;
-margin: 2px;
-padding: 3px;
-background-color:  #209048; 
-border-color: #209048; 
-border-style: solid;
-border-width: 2px;
-
+.button {
+    display: inline-block;
+    margin: 2px;
+    padding: 3px;
+    background-color: #209048;
+    border-color: #209048;
+    border-style: solid;
+    border-width: 2px;
 }
 
-.button:hover{
-display: inline-block;
-margin: 2px;
-padding: 3px;
-background-color: #85bd3e;
-border-color: #209048; 
-border-style: solid;
-border-width: 2px;
-
+.button:hover {
+    display: inline-block;
+    margin: 2px;
+    padding: 3px;
+    background-color: #85bd3e;
+    border-color: #209048;
+    border-style: solid;
+    border-width: 2px;
 }
 
-.userButton{
-display: inline-block;
-margin: 2px;
-padding: 5px;
-background-color: white;
-color: white;
+.userButton {
+    display: inline-block;
+    margin: 2px;
+    padding: 5px;
+    background-color: #FFF;
+    color: #FFF;
 }
 
-.tableContentCell{
-border-color: #85bd3e;
-border-style: solid;
-border-width: 2px;
-
+.tableContentCell {
+    border-color: #85bd3e;
+    border-style: solid;
+    border-width: 2px;
 }
 
-.tableHeaderCell{
-border-color: #85bd3e;
-border-style: solid;
-border-width: 2px;
-
+.tableHeaderCell {
+    border-color: #85bd3e;
+    border-style: solid;
+    border-width: 2px;
 }
 
-.tableContentCell:hover{
-background-color: #85bd3e;
-border-color: #209048;
-border-style: solid;
-border-width: 2px;
-
+.tableContentCell:hover {
+    background-color: #85bd3e;
+    border-color: #209048;
+    border-style: solid;
+    border-width: 2px;
 }
 
-
-.tableContentCellFilled{
-border-color: #85bd3e;
-border-style: solid;
-border-width: 2px;
-
-background-color: #b4b6b1;
+.tableContentCellFilled {
+    border-color: #85bd3e;
+    border-style: solid;
+    border-width: 2px;
+    background-color: #b4b6b1;
 }
 
-
-.error{
-color: red;
-border-color: red;
-border-style: solid;
-border-width: 2px;
-margin: 0.5cm;
-padding: 0.5cm;
-
+.error {
+    color: red;
+    border-color: red;
+    border-style: solid;
+    border-width: 2px;
+    margin: .5cm;
+    padding: .5cm;
 }
 
-#contract h1{
-	text-align: center;
+#contract h1 {
+    text-align: center;
 }
-

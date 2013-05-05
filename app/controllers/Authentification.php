@@ -34,8 +34,6 @@ class Authentification extends Controller{
 		if($connectedPerson!=NULL){
 			$connected=true;
 
-			//echo "Setting username<br />";
-
 			$_SESSION["id"]=$connectedPerson->getAttributeValue("id");
 
 			//$core->callController("Dashboard","view");

@@ -6,7 +6,6 @@
 class User extends Model{
 
 	public static function findPerson($core,$username,$password){
-
 		$md5=md5($password);
 
 		$query="select * from {$core->getTablePrefix()}User where username='$username' and md5Password='$md5' limit 1";
