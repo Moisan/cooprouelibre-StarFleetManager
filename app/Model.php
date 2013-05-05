@@ -122,9 +122,6 @@ class Model{
 		$attributeList="";
 		$valuesList="";
 
-		//print_r($attributes);
-		//print_r($attributeValues);
-
 		for($i=0;$i<count($attributes);$i++){
 			$field=$attributes[$i]['Field'];
 
@@ -147,26 +144,24 @@ class Model{
 
 			$value=$core->getConnection()->escapeString($value);
 
-			//echo "Field: $field, Value: $value";
+			if($type=="varchar(255)" || $type=="date" || $type="char(1)"){				
+				$value="'$value'";	
+			}
 
-			if($type=="varchar(255)" || $type=="date" || $type="char(1)"){
-				
-				$value="'$value'";
-	
+			if($value == "''" || $value == ''){
+				$value = 'NULL';
 			}
 
 			$attributeList.= $field;
 			$valuesList.= $value;
 
 			if($i==count($attributes)-1){
-
 				$attributeList.=" ) ";
 				$valuesList.=" ) ";
 			}else{
 
 				$attributeList.=" , ";
 				$valuesList.=" , ";
-
 			}
 		}
 
@@ -274,8 +269,6 @@ class Model{
 		}
 
 		$query="update $table set $list where id=$id";
-
-		//echo $query;
 
 		$core->getConnection()->query($query);
 

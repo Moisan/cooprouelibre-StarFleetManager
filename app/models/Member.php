@@ -27,9 +27,6 @@ class Member extends Model{
 	}
 
 	public function getSelectOptions($core,$field){
-
-		//echo "Member.getSelectOptions $field";
-
 		if($field=="sex"){
 			return array('F' => 'Femme','M' => 'Homme');
 		}
@@ -46,21 +43,14 @@ class Member extends Model{
 	}
 
 	public function getFilledValue($core,$field){
-
-		if($field=="userIdentifier"){
+		if($field=="userIdentifier" and array_key_exists('id', $_SESSION)){
 			$user=User::findWithIdentifier($core,"User",$_SESSION['id']);
 			return array($user->getId(),$user->getName());
 		}elseif($field=="creationTime"){
 			$item=$core->getCurrentTime();
 			return array($item,$item);
 		}
-
 	}
-
-/*
-- account not locked
-- no actual loan
-*/
 
 	public static function getMembersThatCanLoanABike($core){
 		$tableMember=$core->getTablePrefix()."Member";
@@ -69,9 +59,9 @@ class Member extends Model{
 
 		$now=$core->getCurrentTime();
 
-		$query="select * from $tableMember where not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) 
-			and 
-			not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false ); ";
+		$query="select * from $tableMember where toValidate = false
+			and not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) 
+			and not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false ); ";
 
 		$list=$core->getConnection()->query($query)->getRows();
 		
@@ -121,11 +111,9 @@ class Member extends Model{
 		$keyWordQuery.=" )  ";
 
 		$now=$core->getCurrentTime();
-		$query="select * from $tableMember where not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) $keyWordQuery  
-			and 
-			not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false ); ";
-
-		//echo $query;
+		$query="select * from $tableMember where toValidate = false
+			and not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) $keyWordQuery  
+			and not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false );";
 
 		$list=$core->getConnection()->query($query)->getRows();
 		
@@ -187,6 +175,9 @@ class Member extends Model{
 
 	public function getAttributeLink($name){
 		$id=$this->getAttribute($name);
+		if($id == ''){
+			return 'Inscription du site web';
+		}
 		$object=User::findOne($this->m_core,"User",$id);
 
 		return $object->getLink();

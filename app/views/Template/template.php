@@ -29,13 +29,11 @@ echo($pageTitle);
 
 <?php
 if($username!=NULL){
-
 	$core->makeButton("?controller=UserManagement&action=view&id=$identifier",$username);
 	$core->makeButton("?controller=Authentification&action=logout","se déconnecter");
-
 }else{
-
 	$core->makeButton("?controller=Authentification&action=login","Se connecter");
+	$core->makeButton("?controller=NewMember&action=register", "S'enregistrer");
 }
 
 	$core->makeButton("?controller=Dashboard&action=help","aide");

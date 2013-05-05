@@ -29,9 +29,18 @@ class MemberManagement extends Controller{
 		include($this->getView(__CLASS__,__METHOD__));
 	}
 
-	private function validate($data){
-		if(!strpos($data['email'],'@')){
-			echo "Le courriel est invalide.";
+	private function validate($core, $data){
+		$query = 'select * from TablePrefix_Member where email =\'' . $data['email'] . '\';';
+		if(!strpos($data['email'],'@') 
+			or Member::findOneWithQuery($core, $query, 'Member') != null){
+			echo "Le courriel est invalide ou déjà utilisé.";
+			return false;
+		}
+
+
+		$query = 'select * from TablePrefix_Member where firstName =\'' . $data['firstName'] . '\' and dateOfBirth = \'' . $data['dateOfBirth'] . '\';';
+		if(Member::findOneWithQuery($core, $query, 'Member') != null){
+			echo "Vous êtes déjà enregistré. Veuillez contacter la coopérative si ce n'est pas le cas.";
 			return false;
 		}
 

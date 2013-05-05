@@ -44,6 +44,7 @@ include("app/controllers/Scheduling.php");
 include("app/controllers/Statistics.php");
 include("app/controllers/ClosedDayManagement.php");
 include("app/controllers/BikePlaceManagement.php");
+include("app/controllers/NewMember.php");
 
 
 session_start();
@@ -67,6 +68,7 @@ $core->registerController(new PlaceManagement());
 $core->registerController(new PartManagement());
 $core->registerController(new ClosedDayManagement());
 $core->registerController(new BikePlaceManagement());
+$core->registerController(new NewMember());
 
 $core->setSessionData($_SESSION);
 $core->setGetData($_GET);
