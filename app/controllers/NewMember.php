@@ -9,6 +9,13 @@ class NewMember extends Controller{
 
 	public function call_register($core){
 		$core->setPageTitle("S'enregistrer comme membre");
+
+		if(array_key_exists("lang", $_GET)){
+			$lang = $_GET['lang'];
+		}
+		else{
+			$lang = 'fr';
+		}
 		
 		include($this->getView(__CLASS__,__METHOD__));
 	}
