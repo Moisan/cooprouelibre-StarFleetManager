@@ -35,17 +35,25 @@ class NewMember extends Controller{
 	}
 
 	private function validate($core, $data){
+		if(!isset($data['read_contract'])){
+			echo "Vous n'avez pas valider que vous avez lu le contrat.</br>";
+			echo "You did not validate that you have read the contract.";
+			return false;
+		}
+
 		$query = 'select * from TablePrefix_Member where email =\'' . $data['email'] . '\';';
 		if(!strpos($data['email'],'@') 
 			or Member::findOneWithQuery($core, $query, 'Member') != null){
-			echo "Le courriel est invalide ou déjà utilisé.";
+			echo "Le courriel est invalide ou déjà utilisé.</br>";
+			echo "The email is already used.";
 			return false;
 		}
 
 
 		$query = 'select * from TablePrefix_Member where firstName =\'' . $data['firstName'] . '\' and dateOfBirth = \'' . $data['dateOfBirth'] . '\';';
 		if(Member::findOneWithQuery($core, $query, 'Member') != null){
-			echo "Vous êtes déjà enregistré. Veuillez contacter la coopérative si ce n'est pas le cas.";
+			echo "Vous êtes déjà enregistré. Veuillez contacter la coopérative si ce n'est pas le cas.</br>";
+			echo "You are already registered. If it's not the case, see a employee of the cooperative.";
 			return false;
 		}
 

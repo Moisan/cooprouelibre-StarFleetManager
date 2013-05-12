@@ -11,6 +11,7 @@ if($lang=='en'){
     include("app/views/Template/contrat-anglais.php");
     ?>
         <form action="?controller=NewMember&amp;action=add_save" method="post">
+        <input type="checkbox" name="read_contract" value="1">I have read and understood the above contract.<br>
         <table>
             <tbody>
                 <tr>
@@ -106,6 +107,7 @@ else{
     include("app/views/Template/contrat-francais.php");
     ?>
         <form action="?controller=NewMember&amp;action=add_save" method="post">
+            <input type="checkbox" name="read_contract" value="1">J'ai lu et compris le contrat ci-dessus.<br>
         <table>
             <tbody>
                 <tr>
