@@ -64,6 +64,21 @@ class MemberManagement extends Controller{
 		return true;
 	}
 
+	private function validate_edit($core, $data){
+		if(!strpos($data['email'],'@')){
+			echo "Le courriel est invalide ou déjà utilisé.";
+			return false;
+		}
+
+		$tokens=explode("-",$_POST['dateOfBirth']);
+		if(count($tokens)!=3){
+			echo "La date de naissance doit être entrée dans le format aaaa-mm-jj.";
+			return false;
+		}
+
+		return true;		
+	}
+
 	public function call_addFast_save($core){
 
 		$core->setPageTitle("Sauvegarder un membre rapidement");
@@ -117,7 +132,6 @@ class MemberManagement extends Controller{
 
 
 	public function call_edit($core){
-
 		$core->setPageTitle("Éditer un membre");
 
 		$member=Member::findOne($core,"Member",$_GET['id']);
@@ -126,7 +140,6 @@ class MemberManagement extends Controller{
 	}
 
 	public function call_editSave($core){
-
 		$user=User::findOne($core,"User",$_SESSION['id']);
 		$isLoaner=$user->isLoaner();
 
@@ -134,11 +147,13 @@ class MemberManagement extends Controller{
 			return;
 		}
 
-		if(!$this->validate($_POST)){
+		if(!$this->validate_edit($core, $_POST)){
 			return;
 		}
 
 		$core->setPageTitle("Sauvegarder un membre");
+
+		$_POST['memberIdentifier'] = '0';
 
 		Member::updateRow($core,"Member",$_POST,$_POST['id']);
 	
