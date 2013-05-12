@@ -59,8 +59,7 @@ class Member extends Model{
 
 		$now=$core->getCurrentTime();
 
-		$query="select * from $tableMember where toValidate = false
-			and not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) 
+		$query="select * from $tableMember where not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) 
 			and not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false ); ";
 
 		$list=$core->getConnection()->query($query)->getRows();
@@ -111,8 +110,7 @@ class Member extends Model{
 		$keyWordQuery.=" )  ";
 
 		$now=$core->getCurrentTime();
-		$query="select * from $tableMember where toValidate = false
-			and not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) $keyWordQuery  
+		$query="select * from $tableMember where not exists (select * from $tableLoan where memberIdentifier=$tableMember.id and startingDate = actualEndingDate ) $keyWordQuery  
 			and not exists ( select * from $tableMemberLock where memberIdentifier = $tableMember.id and startingDate <= '$now' and '$now' <= endingDate and lifted = false );";
 
 		$list=$core->getConnection()->query($query)->getRows();

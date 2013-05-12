@@ -19,7 +19,6 @@ class NewMember extends Controller{
 		if(!$this->validate($core, $_POST)){
 			return;
 		}
-		$_POST['toValidate'] = True;
 		$_POST['userIdentifier'] = NULL;
 		$_POST['memberIdentifier'] = 0;
 
