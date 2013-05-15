@@ -303,7 +303,7 @@ class LoanManagement extends Controller
             $data["startingDate"] = date("Y-m-d H:i:s", $now);
             $data["endingDate"] = date("Y-m-d H:i:s", $endingPoint);
             $data["lifted"] = 0;
-            $data["explanation"] = "";
+            $data["explanation"] = "no explanation";
             $data["userIdentifier"] = $_SESSION['id'];
 
             $memberLock = MemberLock::insertRow($core, "MemberLock", $data);
