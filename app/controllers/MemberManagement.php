@@ -102,7 +102,7 @@ class MemberManagement extends Controller{
 
 		$core->setPageTitle("Sauvegarder un membre");
 
-		if(!$this->validate($_POST)){
+		if(!$this->validate($core, $_POST)){
 			return;
 		}
 
@@ -168,13 +168,10 @@ class MemberManagement extends Controller{
 	}
 
 	public function call_cancelLockSave($core){
-
 		$core->setPageTitle("Annuler un bloquage");
 
 		$user=User::findOne($core,"User",$_SESSION['id']);
-		$isManager=$user->isManager();
-
-		if(!$isManager){
+		if(!$user->isManager() or !$user->isLoaner()){
 			return;
 		}
 
@@ -182,7 +179,7 @@ class MemberManagement extends Controller{
 		$data=$memberLock->getAttributes();
 
 		$data['lifted']=1;
-		$data['explanation']=$_POST['explanation'];
+		$data['explanation']= $_POST['explanation'];
 		$data['userIdentifier']=$_SESSION['id'];
 
 		MemberLock::updateRow($core,"MemberLock",$data,$_GET['id']);
@@ -191,26 +188,22 @@ class MemberManagement extends Controller{
 	}
 
 	public function call_addLock($core){
-
 		$core->setPageTitle("Ajouter un bloquage");
 
 		include($this->getView(__CLASS__,__METHOD__));
 	}
 
 	public function call_addLockSave($core){
-
 		$core->setPageTitle("Ajouter un bloquage");
 
 		$user=User::findOne($core,"User",$_SESSION['id']);
-		$isManager=$user->isManager();
-
-		if(!$isManager){
+		if(!$user->isManager() or !$user->isLoaner()){
 			return;
 		}
 
 		$_POST['memberIdentifier']=$_GET['id'];
 		$_POST['lifted']=0;
-		$_POST['explanation']="";
+		$_POST['explanation']= "No explanation";
 		$_POST['userIdentifier']=$_SESSION['id'];
 
 		MemberLock::insertRow($core,"MemberLock",$_POST);
