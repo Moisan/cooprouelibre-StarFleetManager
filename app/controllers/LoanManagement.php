@@ -5,7 +5,6 @@
 
 class LoanManagement extends Controller
 {
-
     public function registerController($core)
     {
         $core->registerControllerName("LoanManagement", $this);
@@ -123,23 +122,26 @@ class LoanManagement extends Controller
     {
         $core->setPageTitle("Voulez-vous faire ce prêt ?");
 
-        $place = Place::findWithIdentifier($core, "Place", $_POST['placeIdentifier']);
-
         $bike = Bike::findWithIdentifier($core, "Bike", $_POST['bikeIdentifier']);
 
         $member = Member::findWithIdentifier($core, "Member", $_POST['memberIdentifier']);
+        $valid = $this->validate_add($core, $member);
 
-        $startingDate = $core->getCurrentTime();
-
+        $place = Place::findWithIdentifier($core, "Place", $_POST['placeIdentifier']);
         $today = $core->getCurrentDate();
+        $startingDate = $core->getCurrentTime();
+        $endingDate = $this->getEndingDate($place, $today, $startingDate);
 
         $schedule = $place->getSchedule($today);
-
-        $endingDate = $this->getEndingDate($place, $today, $startingDate);
 
         $minutes = (strtotime($endingDate) - strtotime($startingDate)) / 60;
 
         include($this->getView(__CLASS__, __METHOD__));
+    }
+
+    private function validate_add($core, $member){
+        $can_loan = Member::getMembersThatCanLoanABike($core);
+        return in_array($member, $can_loan);
     }
 
     private function getEndingDate($place, $today, $startingDate)

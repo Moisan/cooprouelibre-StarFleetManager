@@ -3,12 +3,7 @@
 // Client: Coop Roue-Libre de l'Université Laval
 // License: GPLv3
 
-
-?>
-
-
-<?php
-
+if($valid){
 if($schedule==NULL || $endingDate==NULL){
 
 ?>
@@ -20,6 +15,8 @@ point de service <?php echo $place->getName(); ?>.
 
 }else{
 
+
+
 $this->startForm("?controller=LoanManagement&action=add_save");
 $this->renderHiddenFieldWithValue("memberIdentifier","Membre",$member->getName(),$member->getId());
 $this->renderHiddenFieldWithValue("placeIdentifier","Point de service",$place->getName(),$place->getId());
@@ -29,5 +26,14 @@ $this->renderHiddenFieldWithValue("expectedEndingDate","Retour du prêt",$ending
 $this->renderHiddenFieldWithValue("actualEndingDate","","",$startingDate);
 $this->endForm();
 
+}
+}
+else{
+
+?>
+
+L'utilisateur entré est présentement bloqué.
+
+<?php
 }
 ?>
